@@ -1,13 +1,19 @@
 const express = require('express');
-const router = express.Router();
 const mongoose = require('mongoose');
-
 const quiz = require('../models/quiz');
 
-const { createQuestion } = require('../controllers/quiz');
+const controller = require('../controllers/quiz');
 
-router.route('/')
-  .get( createQuestion );
+module.exports = router => {
+  router
+    .route('/question')
+    .get(controller.displayQuestion)
+    .post(controller.createQuestion);
+  // .delete( deleteAll )
 
+  // router.route('/:questionId');
+  // .patch( editQuestion )
+  // .delete( deleteQuestion )
 
-  module.exports = router;
+  router.route('/questions/all').get(controller.displayAllQuestions);
+};

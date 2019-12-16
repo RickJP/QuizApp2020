@@ -1,7 +1,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const autoIncrement = require('mongoose-auto-increment');
 
-let QuizSchema = new mongoose.Schema({
+const connection = mongoose.createConnection(process.env.DATABASE, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+})
+ 
+autoIncrement.initialize(connection);
+
+const QuizSchema = new mongoose.Schema({
   question: { 
     type: String,
     required: true,
@@ -11,12 +21,14 @@ let QuizSchema = new mongoose.Schema({
     type: [ String ],
     required: true,
   },
-  adminId: {
-    type: Schema.Types.ObjectId,
+  categoryId: {
+    type: Number,
     ref: "Category",
     required: true
   }
   
 }, {timestamps: true})
+
+QuizSchema.plugin(autoIncrement.plugin, {model: 'Quiz', field: 'categoryId'});
 
 module.exports = mongoose.model("Quiz", QuizSchema);
